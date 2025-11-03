@@ -1,35 +1,21 @@
-import { Tabs } from 'expo-router';
+// app/_layout.tsx
 import React from 'react';
+import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { Slot } from 'expo-router';
+import AppHeader from '../../components/AppHeader';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function RootLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <SafeAreaView style={styles.safe}>
+      <AppHeader />
+      <View style={styles.container}>
+        <Slot />
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: '#f5f7fb' },
+  container: { flex: 1, paddingHorizontal: 16, paddingTop: 8 },
+});

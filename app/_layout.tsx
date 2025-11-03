@@ -1,24 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { Slot } from 'expo-router';
+import { Provider } from 'react-redux';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { store } from '../redux/store';
+import { bootstrap } from '../redux/bootstrap';
+import { ThemeProvider } from '../theme/theme';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    // hydrate persisted state (favourites, auth)
+    void bootstrap();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <SafeAreaView style={styles.safe}>
+          <Slot />
+        </SafeAreaView>
+      </ThemeProvider>
+    </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: '#f5f7fb' },
+});
