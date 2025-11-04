@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 import { bootstrap } from '../redux/bootstrap';
 import { ThemeProvider } from '../theme/theme';
+import { ToastProvider } from '../components/Toast';
 
 export default function RootLayout() {
   useEffect(() => {
@@ -16,9 +17,11 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <SafeAreaView style={styles.safe}>
-          <Slot />
-        </SafeAreaView>
+        <ToastProvider>
+          <SafeAreaView style={styles.safe}>
+            <Slot />
+          </SafeAreaView>
+        </ToastProvider>
       </ThemeProvider>
     </Provider>
   );

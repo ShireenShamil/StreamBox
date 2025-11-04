@@ -19,8 +19,13 @@ const slice = createSlice({
       else state.ids.push(id);
       AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
     },
+    clearFavs(state) {
+      state.ids = [];
+      AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
+    },
   },
 });
 
-export const { loadFavs, toggleFavourite } = slice.actions;
+export const { loadFavs, toggleFavourite, clearFavs } = slice.actions;
 export default slice.reducer;
+
