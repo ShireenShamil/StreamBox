@@ -6,8 +6,6 @@ import MovieCard from '../../components/MovieCard';
 import { useToast } from '../../components/Toast';
 import { useTheme } from '../../theme/theme';
 import { Colors } from '../../constants/theme';
-import { useTheme } from '../../theme/theme';
-import { Colors } from '../../constants/theme';
 
 export default function Favourites() {
   const favIds = useAppSelector((s) => s.favourites.ids);
