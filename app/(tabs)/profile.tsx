@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../hooks';
 import { logout } from '../../redux/authSlice';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../theme/theme';
+import { Colors } from '../../constants/theme';
 
 export default function Profile() {
   const auth = useAppSelector((s) => s.auth);
@@ -13,27 +14,28 @@ export default function Profile() {
   const router = useRouter();
   const { isDark, toggle } = useTheme();
 
-  const bg = isDark ? stylesDark.container : styles.container;
-  const textColor = isDark ? '#fff' : '#111';
+  const theme = Colors[isDark ? 'dark' : 'light'];
+  const bg = { backgroundColor: theme.background };
+  const textColor = theme.text;
 
   const initials = (auth.username || 'G').slice(0, 2).toUpperCase();
 
   return (
     <View style={[styles.wrapper, bg]}>
       <View style={styles.header}>
-        <View style={[styles.avatar, isDark && stylesDark.avatarBackground]}>
+        <View style={[styles.avatar, isDark && stylesDark.avatarBackground, { backgroundColor: isDark ? '#1f2937' : '#eee' }]}>
           <Text style={[styles.avatarText, { color: textColor }]}>{initials}</Text>
         </View>
         <View style={styles.userInfo}>
           <Text style={[styles.name, { color: textColor }]}>{auth.username ?? 'Guest'}</Text>
-          <Text style={[styles.sub, { color: isDark ? '#ccc' : '#666' }]}>{auth.username ? (auth.email ?? `${auth.username}@example.com`) : 'Not signed in'}</Text>
+          <Text style={[styles.sub, { color: theme.icon }]}>{auth.username ? (auth.email ?? `${auth.username}@example.com`) : 'Not signed in'}</Text>
         </View>
       </View>
 
       <View style={styles.statsRow}>
         <View style={styles.statBox}>
           <Text style={[styles.statNum, { color: textColor }]}>{favCount}</Text>
-          <Text style={[styles.statLabel, { color: isDark ? '#ccc' : '#666' }]}>Favourites</Text>
+          <Text style={[styles.statLabel, { color: theme.icon }]}>Favourites</Text>
         </View>
         <View style={styles.statBox}>
           <Text style={[styles.statNum, { color: textColor }]}>{/* placeholder */}—</Text>
@@ -41,10 +43,11 @@ export default function Profile() {
         </View>
       </View>
 
-      <View style={styles.rowBetween}>
-        <Text style={[styles.optionLabel, { color: textColor }]}>Dark mode</Text>
-        <Switch value={isDark} onValueChange={toggle} />
-      </View>
+          <View style={[styles.rowBetween, { borderTopColor: theme.icon }]}
+          >
+            <Text style={[styles.optionLabel, { color: textColor }]}>Dark mode</Text>
+            <Switch value={isDark} onValueChange={toggle} thumbColor={isDark ? '#fff' : '#fff'} trackColor={{ true: theme.tint, false: '#ccc' }} />
+          </View>
 
       <TouchableOpacity
         onPress={() => {
@@ -60,9 +63,9 @@ export default function Profile() {
           } catch {}
           router.replace('/');
         }}
-        style={[styles.logoutBtn, isDark ? stylesDark.logoutBtn : null]}
+        style={[styles.logoutBtn, isDark ? stylesDark.logoutBtn : null, { backgroundColor: theme.tint }]}
       >
-        <Text style={styles.logoutText}>Logout</Text>
+        <Text style={[styles.logoutText, { color: theme.background }]}>Logout</Text>
       </TouchableOpacity>
     </View>
   );

@@ -17,6 +17,8 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useLocalSearchParams();
+  // optional next path to navigate after successful login
+  const next = (params.next as string) ?? undefined;
   const [username, setUsername] = useState(() => (params.username as string) ?? '');
   const [email, setEmail] = useState(() => (params.email as string) ?? '');
   const [password, setPassword] = useState('');
@@ -29,10 +31,11 @@ export default function Login() {
   const submit = async () => {
     try {
       await schema.validate({ username, password });
-      dispatch(login({ username, email }));
-      // navigate to home
-      toast.show('Logged in');
-      router.replace('/');
+  dispatch(login({ username, email }));
+  // navigate to requested page or home
+  toast.show('Logged in');
+  if (next) router.replace(decodeURIComponent(next) as any);
+  else router.replace('/');
     } catch (e: any) {
       setErr(e.message);
     }

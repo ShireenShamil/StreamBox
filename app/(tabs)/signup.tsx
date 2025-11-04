@@ -27,8 +27,16 @@ export default function Signup() {
       // show a confirmation toast then redirect to login page and prefill username/email
       toast.show('Account created — please login');
       const qs = `?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&signup=1`;
-  // cast to any because the router typing is narrow in this project setup
-  router.replace((`/login${qs}` as unknown) as any);
+  // preserve optional next param if present so users can continue where they started
+  // read next from current route query if present
+  try {
+    const lp = require('expo-router').useLocalSearchParams();
+    const next = (lp.next as string) ?? undefined;
+    const nextQs = next ? `&next=${encodeURIComponent(next)}` : '';
+    router.replace((`/login${qs}${nextQs}` as unknown) as any);
+  } catch {
+    router.replace((`/login${qs}` as unknown) as any);
+  }
     } catch (e: any) {
       setErr(e.message);
     }

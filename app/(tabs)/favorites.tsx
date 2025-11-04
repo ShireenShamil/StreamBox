@@ -1,6 +1,7 @@
 // app/favorites.tsx
 import React, { useState, useCallback } from 'react';
-import { View, FlatList, Text, RefreshControl } from 'react-native';
+import { View, FlatList, Text, RefreshControl, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAppSelector } from '../../hooks';
 import MovieCard from '../../components/MovieCard';
 import { useToast } from '../../components/Toast';
@@ -10,10 +11,12 @@ import { Colors } from '../../constants/theme';
 export default function Favourites() {
   const favIds = useAppSelector((s) => s.favourites.ids);
   const movies = useAppSelector((s) => s.movies.movies.filter((m) => favIds.includes(m.id)));
+  const auth = useAppSelector((s) => s.auth);
+  const router = useRouter();
+  const toast = useToast();
 
   const { isDark } = useTheme();
   const theme = Colors[isDark ? 'dark' : 'light'];
-  const toast = useToast();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -24,6 +27,17 @@ export default function Favourites() {
       toast.show('Refreshed');
     }, 700);
   }, [toast]);
+
+  if (!auth?.username) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background, padding: 24 }}>
+        <Text style={{ color: theme.text, fontSize: 16, marginBottom: 12 }}>Please login to view and add favourites.</Text>
+        <TouchableOpacity onPress={() => router.push(`/login?next=${encodeURIComponent('/favorites')}`)} style={{ backgroundColor: theme.tint, padding: 10, borderRadius: 8 }}>
+          <Text style={{ color: theme.background }}>Go to Login</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   if (!movies.length) {
     return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background }}><Text style={{ color: theme.text }}>No favourites yet.</Text></View>;

@@ -19,6 +19,17 @@ const slice = createSlice({
       else state.ids.push(id);
       AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
     },
+    addFavourite(state, action: PayloadAction<string>) {
+      const id = action.payload;
+      if (!state.ids.includes(id)) state.ids.push(id);
+      AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
+    },
+    removeFavourite(state, action: PayloadAction<string>) {
+      const id = action.payload;
+      const idx = state.ids.indexOf(id);
+      if (idx >= 0) state.ids.splice(idx, 1);
+      AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
+    },
     clearFavs(state) {
       state.ids = [];
       AsyncStorage.setItem('favs', JSON.stringify(state.ids)).catch(() => {});
@@ -26,6 +37,6 @@ const slice = createSlice({
   },
 });
 
-export const { loadFavs, toggleFavourite, clearFavs } = slice.actions;
+export const { loadFavs, toggleFavourite, addFavourite, removeFavourite, clearFavs } = slice.actions;
 export default slice.reducer;
 

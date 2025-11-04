@@ -14,6 +14,7 @@ export default function Home() {
   const auth = useAppSelector((s) => s.auth);
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(12);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const listRef = React.useRef<FlatList<any> | null>(null);
   const inputRef = React.useRef<any>(null);
   const { isDark } = useTheme();
@@ -47,11 +48,40 @@ export default function Home() {
     dispatch(fetchMovies());
   }, [dispatch]);
 
-  const filtered = movies.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
+  const filtered = movies
+    .filter((m) => m.title.toLowerCase().includes(query.toLowerCase()))
+    .filter((m) => (selectedCategory ? (m.category || '') === selectedCategory : true));
   const visible = filtered.slice(0, visibleCount);
+
+  const categories = React.useMemo(() => {
+    const set = new Set<string>();
+    for (const m of movies) if (m.category) set.add(m.category);
+    return Array.from(set);
+  }, [movies]);
 
   return (
   <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {categories.length ? (
+        <View style={{ paddingHorizontal: 12, paddingVertical: 8 }}>
+          <FlatList
+            horizontal
+            data={['All', ...categories]}
+            keyExtractor={(i) => i}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => {
+              const isAll = item === 'All';
+              const active = isAll ? selectedCategory === null : selectedCategory === item;
+              return (
+                <TouchableOpacity onPress={() => setSelectedCategory(isAll ? null : item)} style={{ marginRight: 8 }}>
+                  <View style={{ paddingVertical: 6, paddingHorizontal: 12, backgroundColor: active ? theme.tint : (isDark ? '#0f1720' : '#fff'), borderRadius: 20, borderWidth: active ? 0 : 1, borderColor: theme.icon }}>
+                    <Text style={{ color: active ? theme.background : theme.text, fontWeight: active ? '700' : '600' }}>{item}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      ) : null}
       <View style={{ padding: 12 }}>
         <TextInput
           ref={inputRef}
