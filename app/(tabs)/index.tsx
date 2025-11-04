@@ -15,6 +15,7 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(12);
   const listRef = React.useRef<FlatList<any> | null>(null);
+  const inputRef = React.useRef<any>(null);
   const { isDark } = useTheme();
   const theme = Colors[isDark ? 'dark' : 'light'];
 
@@ -32,6 +33,16 @@ export default function Home() {
     return unsub;
   }, [dispatch]);
 
+  React.useEffect(() => {
+    const ev = require('../../utils/eventBus');
+    const unsub2 = ev.subscribe('home:focusSearch', () => {
+      try {
+        inputRef.current?.focus();
+      } catch {}
+    });
+    return unsub2;
+  }, []);
+
   useEffect(() => {
     dispatch(fetchMovies());
   }, [dispatch]);
@@ -43,6 +54,7 @@ export default function Home() {
   <View style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={{ padding: 12 }}>
         <TextInput
+          ref={inputRef}
           value={query}
           onChangeText={setQuery}
           placeholder="Search movies..."
