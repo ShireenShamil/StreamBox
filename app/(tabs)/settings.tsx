@@ -115,10 +115,10 @@ export default function Settings() {
       </View>
 
       <TouchableOpacity onPress={clearData} style={{ marginTop: 20, padding: 12, backgroundColor: theme.tint, borderRadius: 8, alignItems: 'center' }}>
-        <Text style={{ color: '#fff', fontWeight: '600' }}>Clear auth & favourites</Text>
+        <Text style={{ color: isDark ? '#000000' : '#fff', fontWeight: '600' }}>Clear auth & favourites</Text>
       </TouchableOpacity>
 
-      <View style={{ marginTop: 18, padding: 12, borderRadius: 8, backgroundColor: isDark ? '#0b1220' : '#fff' }}>
+      <View style={{ marginTop: 18, padding: 12, borderRadius: 8, backgroundColor: theme.background, borderWidth: 0, borderColor: theme.icon }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
           <Text style={{ color: theme.text }}>High quality images</Text>
           <Switch value={highRes} onValueChange={() => toggleHighRes()} thumbColor={highRes ? '#fff' : '#fff'} trackColor={{ true: theme.tint, false: '#ccc' }} />
@@ -147,8 +147,8 @@ export default function Settings() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={handleLogout} style={{ marginTop: 18, padding: 12, borderRadius: 8, backgroundColor: '#64748b', alignItems: 'center' }}>
-        <Text style={{ color: '#fff', fontWeight: '600' }}>Log out</Text>
+      <TouchableOpacity onPress={handleLogout} style={{ marginTop: 18, padding: 12, borderRadius: 8, backgroundColor: theme.tint, alignItems: 'center' }}>
+        <Text style={{ color: theme.background, fontWeight: '600' }}>Log out</Text>
       </TouchableOpacity>
 
       <Text style={{ color: theme.text, marginTop: 24, fontSize: 14 }}>More settings coming soon.</Text>

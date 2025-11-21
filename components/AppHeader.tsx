@@ -119,14 +119,14 @@ export default function AppHeader() {
       </View>
 
       <Modal transparent visible={menuOpen} animationType="fade" onRequestClose={() => setMenuOpen(false)}>
-        <Pressable style={styles.modalBackdrop} onPress={() => setMenuOpen(false)}>
-          <View style={[styles.menu, { backgroundColor: '#e9eef6ff' }]}>
+        <Pressable style={[styles.modalBackdrop, { backgroundColor: isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.4)' }]} onPress={() => setMenuOpen(false)}>
+          <View style={[styles.menu, { backgroundColor: theme.background }]}>
               <FlatList
               data={items}
               keyExtractor={(i) => i.key}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={[styles.menuItem, { borderBottomColor: theme.icon }]}
+                  style={[styles.menuItem, { borderBottomColor: theme.icon, backgroundColor: theme.background }]}
                   onPress={() => {
                     setMenuOpen(false);
                     setTimeout(() => item.action(), 120);
@@ -148,9 +148,9 @@ export default function AppHeader() {
           <View style={[styles.logoutDialog, { backgroundColor: theme.background }]}>
             <Text style={{ color: theme.text, fontSize: 16, fontWeight: '600' }}>Confirm logout</Text>
             <Text style={{ color: theme.icon, marginTop: 8 }}>Are you sure you want to logout?</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 16 }}>
-              <TouchableOpacity onPress={() => setLogoutModalOpen(false)} style={[styles.dialogBtn, { marginRight: 8, backgroundColor: '#e9eef6ff' }]}>
-                <Text style={{ color: theme.text, backgroundColor: '#e9eef6ff' }}>Cancel</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 16 }}>
+              <TouchableOpacity onPress={() => setLogoutModalOpen(false)} style={[styles.dialogBtn, { marginRight: 8, backgroundColor: theme.background }]}>
+                <Text style={{ color: theme.text }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => { setLogoutModalOpen(false); handleLogout(); }} style={[styles.dialogBtn, { backgroundColor: theme.tint }]}>
                 <Text style={{ color: theme.background }}>Logout</Text>
@@ -164,7 +164,7 @@ export default function AppHeader() {
 }
 
 const styles = StyleSheet.create({
-  root: { padding: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',backgroundColor: '#e9eef6ff',shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
+  root: { padding: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   left: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   leftRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   backBtn: { padding: 6, marginRight: 6 },
@@ -172,10 +172,10 @@ const styles = StyleSheet.create({
   greeting: { marginLeft: 12 },
   right: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   iconBtn: { padding: 6 },
-  container: { backgroundColor: '#e9eef6ff' },
+  container: { },
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-start', paddingTop: 60 },
   menu: { margin: 12, borderRadius: 8, overflow: 'hidden', elevation: 6 },
-  menuItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  menuItem: { padding: 12, borderBottomWidth: 1 },
   badge: { position: 'absolute', right: -6, top: -6, backgroundColor: 'crimson', minWidth: 16, height: 16, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
   badgeText: { color: '#fff', fontSize: 10, fontWeight: '700' },
   menuItemRow: { flexDirection: 'row', alignItems: 'center' },

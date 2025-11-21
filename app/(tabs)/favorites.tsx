@@ -40,7 +40,7 @@ export default function Favourites() {
   }
 
   if (!movies.length) {
-    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background }}><Text style={{ color: theme.text }}>No favourites yet.</Text></View>;
+    return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background}}><Text style={{ color: theme.text }}>No favourites yet.</Text></View>;
   }
 
   return (
@@ -48,7 +48,7 @@ export default function Favourites() {
       data={movies}
       keyExtractor={(m) => m.id}
       renderItem={({ item }) => <MovieCard movie={item} />}
-      contentContainerStyle={{ paddingVertical: 12, backgroundColor: theme.background }}
+      contentContainerStyle={{ paddingVertical: 12, paddingHorizontal: 10, backgroundColor: theme.background }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.tint} />}
     />
   );

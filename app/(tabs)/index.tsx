@@ -89,7 +89,7 @@ export default function Home() {
           onChangeText={setQuery}
           placeholder="Search movies..."
           placeholderTextColor={isDark ? '#9BA1A6' : '#888'}
-          style={{ backgroundColor: isDark ? '#0f1720' : '#e9eef6ff',padding:10 , borderRadius: 8, color: theme.text , borderColor:theme.tint,borderWidth: 1}}
+          style={{ backgroundColor: isDark ? '#292a2cff' : '#e9eef6ff',padding:10 , borderRadius: 8, color: theme.text , borderColor:theme.tint,borderWidth: 1}}
         />
       </View>
       <FlatList
@@ -113,7 +113,7 @@ export default function Home() {
       {!auth?.username ? (
         <Link href="/signup" asChild>
           <TouchableOpacity
-            style={{ backgroundColor: theme.tint, paddingVertical: 12, paddingHorizontal: 40, borderRadius: 25, marginBottom: 10, alignSelf: 'center' }}
+            style={{ backgroundColor: theme.tint, paddingVertical: 12, paddingHorizontal: 40, borderRadius: 25, marginTop: 8, marginBottom: 8, alignSelf: 'center' }}
           >
             <Text style={{ color: theme.background, fontWeight: '600', fontSize: 16 }}>Sign Up</Text>
           </TouchableOpacity>

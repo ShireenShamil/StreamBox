@@ -29,7 +29,7 @@ export default function Profile() {
     <View style={[styles.wrapper, bg]}>
       <View style={styles.header}>
         <View style={[styles.avatar, isDark && stylesDark.avatarBackground, { backgroundColor: isDark ? '#1f2937' : theme.tint }]}>
-          <Text style={[styles.avatarText, { color: textColor }]}>{initials}</Text>
+          <Text style={[styles.avatarText, { color: '#FFFFFF' }]}>{initials}</Text>
         </View>
         <View style={styles.userInfo}>
           <TextInput value={editingName} onChangeText={setEditingName} placeholder="Your name" placeholderTextColor={theme.icon} style={[styles.nameInput, { color: textColor }]} />
