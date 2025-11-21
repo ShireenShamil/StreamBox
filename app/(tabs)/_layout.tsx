@@ -53,6 +53,7 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f5f7fb' },
+  // Add a small top padding so the UI doesn't sit flush to the very top on phones
+  safe: { flex: 1, backgroundColor: '#f5f7fb', paddingTop: 40 },
   container: { flex: 1, paddingHorizontal: 7, paddingTop: 7 },
 });
