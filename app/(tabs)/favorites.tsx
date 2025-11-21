@@ -30,7 +30,7 @@ export default function Favourites() {
 
   if (!auth?.username) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background, padding: 24 }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background, padding: 24}}>
         <Text style={{ color: theme.text, fontSize: 16, marginBottom: 12 }}>Please login to view and add favourites.</Text>
         <TouchableOpacity onPress={() => router.push(`/login?next=${encodeURIComponent('/favorites')}`)} style={{ backgroundColor: theme.tint, padding: 10, borderRadius: 8 }}>
           <Text style={{ color: theme.background }}>Go to Login</Text>

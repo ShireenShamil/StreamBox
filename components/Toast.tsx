@@ -44,7 +44,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ show }}>
       {children}
       {visible && message ? (
-        <Animated.View style={[styles.toast, { opacity: anim, backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.85)' }]} pointerEvents="box-none">
+        <Animated.View style={[styles.toast, { opacity: anim, backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : theme.tint }]} pointerEvents="box-none">
           <Text style={[styles.text, { color: '#fff' }]}>{message}</Text>
           {actionLabel && actionCb ? (
             <Text style={styles.action} onPress={() => { actionCb(); setVisible(false); setMessage(null); setActionLabel(null); setActionCb(null); }}>{actionLabel}</Text>
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 12,
     top: 48,
-    backgroundColor: '#111',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,

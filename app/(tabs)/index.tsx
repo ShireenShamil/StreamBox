@@ -60,7 +60,7 @@ export default function Home() {
   }, [movies]);
 
   return (
-  <View style={{ flex: 1, backgroundColor: theme.background }}>
+  <View style={{ flex: 1, backgroundColor: theme.background, paddingHorizontal:12 }}>
       {categories.length ? (
         <View style={{ paddingHorizontal: 12, paddingVertical: 8 }}>
           <FlatList
@@ -82,14 +82,14 @@ export default function Home() {
           />
         </View>
       ) : null}
-      <View style={{ padding: 12 }}>
+      <View style={{ marginTop: 8, marginBottom: 8 }}>
         <TextInput
           ref={inputRef}
           value={query}
           onChangeText={setQuery}
           placeholder="Search movies..."
           placeholderTextColor={isDark ? '#9BA1A6' : '#888'}
-          style={{ backgroundColor: isDark ? '#0f1720' : '#fff', padding: 10, borderRadius: 8, color: theme.text }}
+          style={{ backgroundColor: isDark ? '#0f1720' : '#e9eef6ff',padding:10 , borderRadius: 8, color: theme.text , borderColor:theme.tint,borderWidth: 1}}
         />
       </View>
       <FlatList

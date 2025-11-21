@@ -31,7 +31,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   const textColor = theme.text;
 
   return (
-    <TouchableOpacity onPress={() => router.push(`/details?id=${movie.id}`)} style={[cardStyles.container, { backgroundColor: theme.background }]}>
+    <TouchableOpacity onPress={() => router.push(`/details?id=${movie.id}`)} style={[cardStyles.container, { backgroundColor:'#e9eef6ff'  }]}>
       <Image source={{ uri: movie.image || movie.movie_banner }} style={cardStyles.image} />
       <View style={cardStyles.content}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -73,8 +73,8 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 }
 
 const cardStyles = StyleSheet.create({
-  container: { flexDirection: 'row', marginVertical: 8, backgroundColor: '#fff', borderRadius: 12, overflow: 'hidden', elevation: 1 },
-  image: { width: 110, height: 110 },
+  container: { flexDirection: 'row', marginVertical: 8, backgroundColor: '#6f9ddeff', borderRadius: 12, overflow: 'hidden', elevation: 1 },
+  image: { width: 110, height: 120 },
   content: { flex: 1, padding: 12 },
   title: { fontSize: 16, fontWeight: '700' },
   desc: { marginTop: 6 },

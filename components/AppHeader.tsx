@@ -105,7 +105,7 @@ export default function AppHeader() {
         >
           <Feather name="film" size={22} color={textColor} />
           <Text style={[styles.title, { color: textColor }]}>StreamBox</Text>
-    {auth.username ? <Text style={[styles.greeting, { color: theme.icon }]}>Hi, {auth.username}</Text> : null}
+    {auth.username ? <Text style={[styles.greeting, { color: theme.icon }]}>Hello, {auth.username}</Text> : null}
         </TouchableOpacity>
       </View>
 
@@ -120,7 +120,7 @@ export default function AppHeader() {
 
       <Modal transparent visible={menuOpen} animationType="fade" onRequestClose={() => setMenuOpen(false)}>
         <Pressable style={styles.modalBackdrop} onPress={() => setMenuOpen(false)}>
-          <View style={[styles.menu, { backgroundColor: theme.background }]}>
+          <View style={[styles.menu, { backgroundColor: '#e9eef6ff' }]}>
               <FlatList
               data={items}
               keyExtractor={(i) => i.key}
@@ -149,8 +149,8 @@ export default function AppHeader() {
             <Text style={{ color: theme.text, fontSize: 16, fontWeight: '600' }}>Confirm logout</Text>
             <Text style={{ color: theme.icon, marginTop: 8 }}>Are you sure you want to logout?</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 16 }}>
-              <TouchableOpacity onPress={() => setLogoutModalOpen(false)} style={[styles.dialogBtn, { marginRight: 8, backgroundColor: theme.tabIconDefault }]}>
-                <Text style={{ color: theme.text }}>Cancel</Text>
+              <TouchableOpacity onPress={() => setLogoutModalOpen(false)} style={[styles.dialogBtn, { marginRight: 8, backgroundColor: '#e9eef6ff' }]}>
+                <Text style={{ color: theme.text, backgroundColor: '#e9eef6ff' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => { setLogoutModalOpen(false); handleLogout(); }} style={[styles.dialogBtn, { backgroundColor: theme.tint }]}>
                 <Text style={{ color: theme.background }}>Logout</Text>
@@ -164,7 +164,7 @@ export default function AppHeader() {
 }
 
 const styles = StyleSheet.create({
-  root: { padding: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  root: { padding: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',backgroundColor: '#e9eef6ff',shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   left: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   leftRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   backBtn: { padding: 6, marginRight: 6 },
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   greeting: { marginLeft: 12 },
   right: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   iconBtn: { padding: 6 },
-  container: { backgroundColor: '#fff' },
+  container: { backgroundColor: '#e9eef6ff' },
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-start', paddingTop: 60 },
   menu: { margin: 12, borderRadius: 8, overflow: 'hidden', elevation: 6 },
   menuItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
