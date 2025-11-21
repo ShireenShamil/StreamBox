@@ -1,10 +1,47 @@
 // app/_layout.tsx
-import React from 'react';
-import { SafeAreaView, View, StyleSheet } from 'react-native';
-import { Slot } from 'expo-router';
+import React, { useEffect } from 'react';
+import { SafeAreaView, View, StyleSheet, Platform } from 'react-native';
+import { Slot, useRouter } from 'expo-router';
 import AppHeader from '../../components/AppHeader';
 
 export default function RootLayout() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      // ignore when focus is inside an input/textarea/contenteditable
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const tag = target.tagName?.toLowerCase();
+        const isEditable = tag === 'input' || tag === 'textarea' || (target as any).isContentEditable;
+        if (isEditable) return;
+      }
+
+      if (e.key === 'ArrowLeft') {
+        // go back in SPA history; router.back() as fallback
+        if (typeof window !== 'undefined' && window.history && typeof window.history.back === 'function') {
+          window.history.back();
+        } else {
+          router.back();
+        }
+      }
+
+      if (e.key === 'ArrowRight') {
+        if (typeof window !== 'undefined' && window.history && typeof window.history.forward === 'function') {
+          window.history.forward();
+        } else {
+          // No forward API from router; do nothing or implement custom logic
+        }
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }
+    return undefined;
+  }, [router]);
+
   return (
     <SafeAreaView style={styles.safe}>
       <AppHeader />
@@ -17,5 +54,5 @@ export default function RootLayout() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#f5f7fb' },
-  container: { flex: 1, paddingHorizontal: 16, paddingTop: 8 },
+  container: { flex: 1, paddingHorizontal: 7, paddingTop: 7 },
 });
