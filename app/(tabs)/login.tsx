@@ -11,7 +11,14 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from '../../theme/theme';
 import { Colors } from '../../constants/theme';
 
-const schema = yup.object({ username: yup.string().min(3).required(), password: yup.string().min(4).required() });
+const schema = yup
+  .object({ username: yup.string().min(3), email: yup.string().email(), password: yup.string().min(4).required('Password is required') })
+  .test('username-or-email', 'Please provide a username or a valid email', (value) => {
+    if (!value) return false;
+    const hasUsername = !!value.username && value.username.trim().length >= 3;
+    const hasEmail = !!value.email && value.email.trim().length > 0;
+    return hasUsername || hasEmail;
+  });
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -23,21 +30,69 @@ export default function Login() {
   const [email, setEmail] = useState(() => (params.email as string) ?? '');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ username?: string; email?: string; password?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(!!params.signup);
   const toast = useToast();
   const { isDark } = useTheme();
   const theme = Colors[isDark ? 'dark' : 'light'];
 
   const submit = async () => {
+    setErr('');
+    setFieldErrors({});
+    setIsSubmitting(true);
     try {
-      await schema.validate({ username, password });
-  dispatch(login({ username, email }));
-  // navigate to requested page or home
-  toast.show('Logged in');
-  if (next) router.replace(decodeURIComponent(next) as any);
-  else router.replace('/');
+      await schema.validate({ username, email, password }, { abortEarly: false });
+      // call dummy auth API
+      try {
+        // dummyjson expects `username` and `password`.
+        const usernameToSend = (username && username.trim()) || (email && email.trim() ? email.split('@')[0] : '');
+        const body: any = { username: usernameToSend, password };
+        const res = await fetch('https://dummyjson.com/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          // try parse json body for message otherwise fall back to text
+          let msg = 'Authentication failed';
+          try {
+            const j = await res.json();
+            if (j && j.message) msg = j.message;
+            else if (j && j.error) msg = j.error;
+            else msg = JSON.stringify(j);
+          } catch {
+            try { msg = await res.text(); } catch { /* ignore */ }
+          }
+          throw new Error(msg || 'Authentication failed');
+        }
+        const data = await res.json();
+        // data contains 'token' and 'user' object
+        const user = data.user || {};
+        const uname = user.username || username || user.firstName || '';
+        const uemail = user.email || email || '';
+        dispatch(login({ username: uname, email: uemail }));
+        toast.show('Logged in');
+        if (next) router.replace(decodeURIComponent(next) as any);
+        else router.replace('/');
+      } catch (apiErr: any) {
+        setErr(apiErr.message || 'Login failed');
+      }
     } catch (e: any) {
-      setErr(e.message);
+      // collect field errors if validation error
+      if (e.name === 'ValidationError' && Array.isArray(e.inner)) {
+        const fe: any = {};
+        e.inner.forEach((errItem: any) => {
+          if (errItem.path) fe[errItem.path] = errItem.message;
+        });
+        // if the custom test failed without a path, show general message
+        if (!fe.username && !fe.email && !fe.password) setErr(e.message || 'Validation failed');
+        setFieldErrors(fe);
+      } else {
+        setErr(e.message || 'Login failed');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -55,13 +110,18 @@ export default function Login() {
             </View>
           ) : null}
 
-  <TextInput placeholder="Username" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={username} onChangeText={setUsername} style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} />
-  <TextInput placeholder="Email" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={email} onChangeText={setEmail} style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} keyboardType="email-address" />
-        <TextInput placeholder="Password" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={password} onChangeText={setPassword} secureTextEntry style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} />
+  <TextInput placeholder="Username" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={username} onChangeText={(v) => { setUsername(v); setFieldErrors((s) => ({ ...s, username: undefined })); }} style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} />
+  {!!fieldErrors.username && <Text style={{ color: 'crimson' }}>{fieldErrors.username}</Text>}
+
+  <TextInput placeholder="Email" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={email} onChangeText={(v) => { setEmail(v); setFieldErrors((s) => ({ ...s, email: undefined })); }} style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} keyboardType="email-address" />
+  {!!fieldErrors.email && <Text style={{ color: 'crimson' }}>{fieldErrors.email}</Text>}
+
+        <TextInput placeholder="Password" placeholderTextColor={isDark ? '#9BA1A6' : '#666'} value={password} onChangeText={(v) => { setPassword(v); setFieldErrors((s) => ({ ...s, password: undefined })); }} secureTextEntry style={[styles.input, { backgroundColor: isDark ? '#0f1720' : '#fff', color: theme.text, borderColor: isDark ? '#222' : '#eee' }]} />
+        {!!fieldErrors.password && <Text style={{ color: 'crimson' }}>{fieldErrors.password}</Text>}
         {!!err && <Text style={{ color: 'crimson' }}>{err}</Text>}
 
-        <TouchableOpacity onPress={submit} style={[styles.btn, { backgroundColor: theme.tint }]}>
-          <Text style={{ color: '#fff' }}>Login</Text>
+        <TouchableOpacity onPress={submit} disabled={isSubmitting} style={[styles.btn, { backgroundColor: isSubmitting ? '#9aa4a8' : theme.tint }]}>
+          <Text style={{ color: '#fff' }}>{isSubmitting ? 'Signing in...' : 'Login'}</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
