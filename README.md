@@ -1,1 +1,1 @@
-StreamBox - Gibli
+StreamBox - Gibli Movies
